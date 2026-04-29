@@ -30,13 +30,8 @@ menu = st.sidebar.radio(
     ["🏠 Trang chủ & Lịch", "📝 Đăng ký Đào tạo", "🔐 Quản trị viên"]
 )
 
-# Helper for Session Descriptions
-SESSION_INFO = {
-    "Buổi 1: Lý thuyết": "Lý thuyết",
-    "Buổi 2: Thực hành cơ bản": "Thực hành 3 case cơ bản",
-    "Buổi 3: Thực hành nâng cao": "Thực hành 2 case nâng cao",
-    "Buổi 4: Chia sẻ bài tập": "Các Bộ phận chia sẻ bài tập"
-}
+# List of sessions
+SESSIONS = ["Buổi 1: Lý thuyết", "Buổi 2: Thực hành cơ bản", "Buổi 3: Thực hành nâng cao", "Buổi 4: Chia sẻ bài tập"]
 
 # --- HOME PAGE ---
 if menu == "🏠 Trang chủ & Lịch":
@@ -109,7 +104,7 @@ elif menu == "📝 Đăng ký Đào tạo":
                     final_dept = st.text_input("Nhập tên bộ phận khác:", placeholder="Ví dụ: Bảo vệ, Tạp vụ...")
                 
                 team_name = st.text_input("Team (tự điền):", placeholder="Ví dụ: Kỹ thuật sản phẩm...")
-                session_type = st.selectbox("3. Buổi đào tạo:", list(SESSION_INFO.keys()))
+                session_type = st.selectbox("3. Buổi đào tạo:", SESSIONS)
                 attendees = st.number_input("6. Số lượng người nhận đào tạo (dự kiến):", min_value=1, max_value=200, value=5)
             with col2:
                 training_date = st.date_input("4. Ngày đào tạo (Tháng 5 & 6):", value=min_date, min_value=min_date, max_value=max_date)
@@ -120,12 +115,11 @@ elif menu == "📝 Đăng ký Đào tạo":
                 with c2:
                     exact_time = st.text_input("Giờ cụ thể:", placeholder="Ví dụ: 09:00...")
                 final_timeslot = f"{period} {exact_time}"
-                st.info(f"📌 **Nội dung:** {SESSION_INFO[session_type]}")
                 
             submitted = st.form_submit_button("Xác nhận Đăng ký")
             if submitted:
                 if team_name and exact_time and final_dept:
-                    db.save_registration(final_dept, team_name, session_type, SESSION_INFO[session_type], training_date, final_timeslot, attendees)
+                    db.save_registration(final_dept, team_name, session_type, "", training_date, final_timeslot, attendees)
                     st.success(f"✅ Đã lưu đăng ký cho {final_dept} thành công!")
                 else:
                     st.error("⚠️ Vui lòng điền đủ thông tin.")
